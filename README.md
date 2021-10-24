@@ -1,2 +1,2 @@
 # arStatistic
-Biblioteca de estatístic em Python.
+Biblioteca de estatística em Python.
