@@ -1,189 +1,155 @@
-#Retorna dados brutos
-def getBrutos(dados):
-    dadost = dados[:]
-    dadost.sort()
-    return dadost
-
-#Retorna dados ponderados
-def getPonderados(dados):
-    xi = []
-    fi = []
-    for i in dados:
-        if not i in xi: 
-            xi.append(i)
-            fi.append(dados.count(i))
-    xi.sort()
-
-    Fi = []
-    sumfi = 0
-    for i in fi:
-        sumfi += i
-        Fi.append(sumfi)
-
-    fri = [i/sumfi for i in fi]
-    
-    sumFri = 0
-    Fri = []
-    for i in fri:
-        sumFri += i
-        Fri.append(sumFri)
-    
-    return [xi, fi, fri, Fi, Fri]
-
-#Retorna dados em intervalo de classes
-def getIntervalos(dados):
-    pass
-
-#Retorna dados em rol
-def getRol(dados):
-    dados[:].sort()
-    return dados
-
-#Retorna média Aritmética
-def getMx(dados, floats=10):
-    sumXi = 0
-    n = len(dados)
-    for i in dados:
-        sumXi += i
-    return round(sumXi/n, floats)
-
-#Retorna média Geométrica
-def getMg(dados, floats=10):
-    n = len(dados)
-    multdados = 1
-    for i in dados:
-        multdados *= i
-    return round(multdados ** (1/n), floats)
-
-#Retorna média Harmônica
-def getMh(dados, floats=10):
-    n = len(dados)
-    sum1sobreXi = 0
-    for i in dados:
-        if i == 0:
-            pass
-        else:
-            sum1sobreXi += (1/i)
-    return round(n/sum1sobreXi, floats)
-
-#Retorna Amplitude H
-def getH(dados):
-    if len(dados) > 0:
-        li, ls = dados[0], dados[0]
-        for i in dados:
-            if i < li: li = i
-            if i > ls: ls = i
-        return ls - li
-
-#Retorna dados modal
-def getMo(dados):
-    if len(dados) > 0:
-        list_itens = []
-        for i in dados:
-            if not i in list_itens:
-                list_itens.append(i)
-
-        list_itens_fi = [[dados.count(i), i] for i in list_itens]
-        list_itens_fi.sort()
-        moda = [list_itens_fi[0]]
-        
-        for i in list_itens_fi:
-            if i[0] > moda[0][0]:
-                moda = [i]
-            elif i[0] == moda[0][0]:
-                moda.append(i)
-        
-        if len(moda) <= 2:
-            return [i[1] for i in moda]
-
-#Retorna mediana
-def getMe(dados):
-    def par(n): 
-        if not int(n/2) < n/2: return True
-    n = len(dados)
-    dados.sort()
-    if par(n):
-        me = getMx([dados[int(n/2)-1], dados[int((n/2)+1-1)]])
-    else:
-        me = dados[int((n+1)/2)-1]
-    return me
-
-#Retorna Variância Var
-def getVar(dados, amostra=False, floats=10):
-    sumXimenosMxaoquad = 0
-    Mx = getMx(dados)
-    n = len(dados)
-    for i in dados:
-        sumXimenosMxaoquad += ((i-Mx)**2)
-    if not amostra:
-        return round(sumXimenosMxaoquad/n, floats)
-    return round(sumXimenosMxaoquad/(n-1), floats)
-
-#Retorna Desvio-padrão DP
-def getDP(dados, amostra=False, floats=10):
-    return round(getVar(dados, amostra, floats)**(1/2), floats)
-
-#Retorna Coeficiênte de variação CV
-def getCV(dados, amostra=False, floats=10):
-    return round(getDP(dados, amostra, floats)/getMx(dados), floats)
-
 #Classes Conjunto
 class Conjunto:
-    def __init__(self, dados_iniciais=[], amostra=False, descricao=""):
+    def __init__(self, dados_iniciais=[], amostra=True, descricao=""):
         self.dados = dados_iniciais
         self.amostra = amostra
         self.descricao = descricao
-        self.update()
+    
+    #Retorna dados brutos
+    def Brutos(self):
+        dadost = self.dados[:]
+        dadost.sort()
+        return dadost
 
-    def update(self):
-        if len(self.dados) == 0: return None
+    #Retorna dados ponderados
+    def Ponderados(self):
+        xi = []
+        fi = []
+        for i in self.dados:
+            if not i in xi: 
+                xi.append(i)
+                fi.append(self.dados.count(i))
+        xi.sort()
 
-        #Define n
-        self.n = len(self.dados)
+        Fi = []
+        sumfi = 0
+        for i in fi:
+            sumfi += i
+            Fi.append(sumfi)
 
-        #Define Mx
-        self.Mx = getMx(self.dados)
+        fri = [i/sumfi for i in fi]
+        
+        sumFri = 0
+        Fri = []
+        for i in fri:
+            sumFri += i
+            Fri.append(sumFri)
+        
+        return [xi, fi, fri, Fi, Fri]
 
-        #Define Mg
-        self.Mg = getMg(self.dados)
+    #Retorna dados em intervalo de classes
+    def Intervalos(self):
+        pass
 
-        #Define Mh
-        self.Mh = getMh(self.dados)
+    """#Retorna dados em rol
+    def Rol(self):
+        self.dados[:].sort()
+        return dados"""
 
-        #Define H
-        self.H = getH(self.dados)
+    #Retorna média Aritmética
+    def Mx(self):
+        sumXi = 0
+        n = len(self.dados)
+        for i in self.dados:
+            sumXi += i
+        return sumXi/n
 
-        #Define Mo
-        self.Mo = getMo(self.dados)
+    #Retorna média Geométrica
+    def Mg(self):
+        n = len(self.dados)
+        multdados = 1
+        for i in self.dados:
+            multdados *= i
+        return multdados ** (1/n)
 
-        #Define Me
-        self.Me = getMe(self.dados)
+    #Retorna média Harmônica
+    def Mh(self):
+        n = len(self.dados)
+        sum1sobreXi = 0
+        for i in self.dados:
+            if i == 0:
+                pass
+            else:
+                sum1sobreXi += (1/i)
+        return n/sum1sobreXi
 
-        #Define Var
-        self.Var = getVar(self.dados, amostra=self.amostra)
+    #Retorna Amplitude H
+    def H(self):
+        if len(self.dados) > 0:
+            li, ls = self.dados[0], self.dados[0]
+            for i in self.dados:
+                if i < li: li = i
+                if i > ls: ls = i
+            return ls - li
 
-        #Define DP
-        self.DP = getDP(self.dados, amostra=self.amostra)
+    #Retorna dados modais
+    def Mo(self):
+        if len(self.dados) > 0:
+            list_itens = []
+            for i in self.dados:
+                if not i in list_itens:
+                    list_itens.append(i)
 
-        #Define CV
-        self.CV = getCV(self.dados, amostra=self.amostra)
+            list_itens_fi = [[self.dados.count(i), i] for i in list_itens]
+            list_itens_fi.sort()
+            moda = [list_itens_fi[0]]
+            
+            for i in list_itens_fi:
+                if i[0] > moda[0][0]:
+                    moda = [i]
+                elif i[0] == moda[0][0]:
+                    moda.append(i)
+            
+            if len(moda) <= 2:
+                return [i[1] for i in moda]
+
+    #Retorna mediana
+    def Me(self):
+        def par(n): 
+            if not int(n/2) < n/2: return True
+        n = len(self.dados)
+        self.dados.sort()
+        if par(n):
+            to_mean = Conjunto([self.dados[int(n/2)-1], self.dados[int(n/2)]])
+            me = to_mean.Mx()
+        else:
+            me = float(self.dados[int((n+1)/2)-1])
+        return me
+
+    #Retorna Variância Var
+    def Var(self):
+        sumXimenosMxaoquad = 0
+        Mx = self.Mx()
+        n = len(self.dados)
+        for i in self.dados:
+            sumXimenosMxaoquad += ((i-Mx)**2)
+        if not self.amostra:
+            return sumXimenosMxaoquad/n
+        return sumXimenosMxaoquad/(n-1)
+
+    #Retorna Desvio-padrão DP
+    def DP(self):
+        return self.Var()**(1/2)
+
+    #Retorna Coeficiênte de variação CV
+    def CV(self):
+        return self.DP()/self.Mx()
 
     def add(self, dados):
         self.dados += dados
-        self.update()
     
-    def getDados(self, tipo='brutos'):
+    def Dados(self, tipo='brutos'):
         if tipo == 'brutos':
-            return getBrutos(self.dados)
+            return self.Brutos()
 
         elif tipo == 'ponderados':
-            return getPonderados(self.dados)
+            return self.Ponderados()
 
 #Funções regressão linear
 #Retorna covariância
 def getCOV(dadosx, dadosy):
-    mx = getMx(dadosx)
-    my = getMx(dadosy)
+    mx = dadosx.Mx()
+    my = dadosy.Mx()
 
     sumximenosxmvezesyimenosym = 0
     for i in range(len(dadosx)):
@@ -191,13 +157,13 @@ def getCOV(dadosx, dadosy):
     return sumximenosxmvezesyimenosym/len(dadosx)
 
 #Retorna correlação linear
-def getR(dadosx, dadosy):
-    return getCOV(dadosx, dadosy)/(getDP(dadosx)*getDP(dadosy))
+def R(dadosx, dadosy):
+    return getCOV(dadosx, dadosy)/(dadosx.DP()*dadosy.DP())
 
 #Retorna variáveis a e b da equação linear (y = a+bx)
 def getAb(dadosx, dadosy):
-    b = getCOV(dadosx, dadosy) / getVar(dadosx)
-    a = getMx(dadosy) - (b*getMx(dadosx))
+    b = getCOV(dadosx, dadosy) / dadosx.Var()
+    a = dadosy.Mx() - (b*dadosx.Mx())
 
     return a, b
 
@@ -220,11 +186,8 @@ class RegressionL():
         return [self.a + (self.b * i) for i in x]
 
 if __name__ == '__main__':
-    dadosx = [5, 10, 15, 20, 25]
-    dadosy = [10, 13, 18, 26, 40]
+    dadosx = [5, 10, 15, 3, 5, 15, 14, 20, 25]
 
-    regressao1 = RegressionL()
-    regressao1.fit(dadosx, dadosy)
-
-    print(regressao1.predict([20]))
-
+    conjX = Conjunto(dadosx)
+    
+    print(conjX.Me())
